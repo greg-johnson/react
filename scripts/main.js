@@ -6,7 +6,7 @@ var ReactDOM = require('react-dom');
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
-var Navigation = ReactRouter.Navigation;
+var History = ReactRouter.History;
 import { browserHistory } from 'react-router'
 
 // Import Our Helpers File
@@ -35,23 +35,47 @@ var OrderHistory = React.createClass({
 
 
 /*
-  Order Page
-  
-  Our main app class which contains all our other 
-  classes too.
+  All Orders Page
   	
 */
-var Order = React.createClass({
-	
+var Orders = React.createClass({
+	mixins : [History],
+	getOrderDetails : function(evt){
+		evt.preventDefault();
+		var orderId = this.refs.orderButton.dataset.ordernum;
+		this.history.pushState(null, '/order/' + orderId);
+	},
 	render : function(){
 		return(
 			<div>
-				<p>The order</p>
+				<p>This should be a list of orders <a data-ordernum='2' ref="orderButton" onClick={this.getOrderDetails}>Get Order</a></p>
 			</div>
 		)
 	}
 	
 });
+
+
+
+/*
+  Order Page
+  
+*/
+var Order = React.createClass({
+	render : function(){
+		return(
+			<div>
+				<p>This is order: Who knows</p>
+			</div>
+		)
+	}
+	
+});
+
+
+
+
+
 
 
 /*
@@ -83,6 +107,7 @@ var NotFound = React.createClass({
 var routes = (
 	<Router history={browserHistory}>
 		<Route path='/' component={OrderHistory} />
+		<Route path='/order' component={Orders} />
 		<Route path='/order/:orderId' component={Order} />
 		<Route path='*' component={NotFound} />
 	</Router>
